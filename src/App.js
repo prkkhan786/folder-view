@@ -1,25 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useState } from "react";
+import Folder from "./components/Folder";
+import File from "./components/File";
 
-function App() {
+const FOLDER_DATA = {
+  Folders: [
+    { Name: "Project Management" },
+    { Name: "Contracts" },
+    {
+      Name: "Engineering",
+      Folders: [
+        { Name: "Assets" },
+        {
+          Name: "Requirements",
+          Folders: [
+            {
+              Name: "node_modules",
+              Folders: [{ Name: "mongo" }, { Name: "react" }],
+            },
+            { Name: "modules" },
+          ],
+        },
+      ],
+    },
+    { Name: "new added" },
+  ],
+};
+
+const TreeRecursive = ({ data }) => {
+  return data.map((item) => {
+    if (item["Folders"] === undefined) {
+      return <File name={item.Name} />;
+    }
+    if (item["Folders"] !== undefined) {
+      return (
+        <Folder name={item.Name}>
+          <TreeRecursive data={item.Folders} />
+        </Folder>
+      );
+    }
+  });
+};
+const Tree = ({ data }) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="tree">
+      <TreeRecursive data={data} />
+    </div>
+  );
+};
+
+export default function App() {
+  return (
+    <div>
+      <Tree data={FOLDER_DATA["Folders"]} />
     </div>
   );
 }
-
-export default App;
